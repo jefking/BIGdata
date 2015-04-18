@@ -1,4 +1,3 @@
-Ideas
 - Bitcoin Ledger, Validation
 -- Machine learning to determine patterns
 
@@ -8,3 +7,23 @@ Ideas
 
 - Weather, geoloaction data; 
 -- what do people do? how weather influences what people do
+
+- IoT
+- Data collection, and processing
+
+- Keyboard, delay on typing and typing patterns
+-- determine if we can figure out if people are unique
+
+- Reality data
+-- multiple data sets
+-- Air BnB
+-- People moving into a market, and the price of housing
+
+- Firewall
+-- Anomylies in the data
+-- routing tables, user traffic
+-- SNMP analysis
+
+- GitHub
+-- Looking at Git repositories
+-- Languages, polyglots, project spreads
