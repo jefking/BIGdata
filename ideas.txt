@@ -1,10 +1,11 @@
-
-
-- Weather, geoloaction data; (4)
+- Weather, geoloaction data;
 -- what do people do? how weather influences what people do
 
-- IoT (4)
-- Data collection, and processing
+- IoT
+-- Data collection, and processing
 
-- Keyboard, delay on typing and typing patterns (4)
+- Keyboard
+-- delay on typing and typing patterns
 -- determine if we can figure out if people are unique
+-- IRC, Slack; is there a key stroke protocol;
+-- hook into a public IRC channel that is pumping data... could we determine bots Vs humans?
