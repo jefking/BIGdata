@@ -1,29 +1,10 @@
-- Bitcoin Ledger, Validation
--- Machine learning to determine patterns
 
-- Immigration from Canadian government (pub data set)
--- Look at the statistics, if there is validity to immigration laws passed
--- Most desired, determining inbound future
 
-- Weather, geoloaction data; 
+- Weather, geoloaction data; (4)
 -- what do people do? how weather influences what people do
 
-- IoT
+- IoT (4)
 - Data collection, and processing
 
-- Keyboard, delay on typing and typing patterns
+- Keyboard, delay on typing and typing patterns (4)
 -- determine if we can figure out if people are unique
-
-- Reality data
--- multiple data sets
--- Air BnB
--- People moving into a market, and the price of housing
-
-- Firewall
--- Anomylies in the data
--- routing tables, user traffic
--- SNMP analysis
-
-- GitHub
--- Looking at Git repositories
--- Languages, polyglots, project spreads
