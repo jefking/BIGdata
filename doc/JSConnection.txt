@@ -16,6 +16,9 @@ Secondary Service Bus
 
 Endpoint=sb://keysaasy.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=QV7kUnwdkyFRXmQVX7g/2fGuE+IUs+eI974ELIK0xJc=
 
-keysaasy.servicebus.windows.net
+URL: keysaasy.servicebus.windows.net
+Event Hub: keyspls
+
+Credentials:
 JSSender
 UugxnJkH/Th4An4LzSKXc8fC3IAfOwGhPMRHh/Y7mg4=
