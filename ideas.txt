@@ -6,6 +6,10 @@
 
 - Keyboard
 -- delay on typing and typing patterns
--- determine if we can figure out if people are unique
 -- IRC, Slack; is there a key stroke protocol;
 -- hook into a public IRC channel that is pumping data... could we determine bots Vs humans?
+-- Grab a key logging framework, and build off of that?
+-- Typing Errors, deletes; rate of failure; correlation between rate of failure and speed.
+-- Type of keyboards, keyboard layouts make a difference (if we note what type of computer are people are on).
+-- Languages, second languages; could gleam some more information into usage
+-- Main Goal: Determine Unique Users; and how many keystrokes does it take?
