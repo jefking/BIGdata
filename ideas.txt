@@ -1,0 +1,10 @@
+Ideas
+- Bitcoin Ledger, Validation
+-- Machine learning to determine patterns
+
+- Immigration from Canadian government (pub data set)
+-- Look at the statistics, if there is validity to immigration laws passed
+-- Most desired, determining inbound future
+
+- Weather, geoloaction data; 
+-- what do people do? how weather influences what people do
