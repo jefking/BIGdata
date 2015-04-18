@@ -9,3 +9,13 @@ MNhRH8x/JrHldcIIDlVaSJw5TUPQ/DW5mSI3LpGqgCk=
 
 Audit
 Xax5S+iioVMw3jgyhYbzrDtz8jC9IwkKE/Qs7jeyNCM=
+
+
+
+Secondary Service Bus
+
+Endpoint=sb://keysaasy.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=QV7kUnwdkyFRXmQVX7g/2fGuE+IUs+eI974ELIK0xJc=
+
+keysaasy.servicebus.windows.net
+JSSender
+UugxnJkH/Th4An4LzSKXc8fC3IAfOwGhPMRHh/Y7mg4=
