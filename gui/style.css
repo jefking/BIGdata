@@ -9,6 +9,7 @@ body {
 	top: 0;
 	left: 0;
 	border: 2px solid #0af;
+	overflow-y: auto;
 }
 
 .text p {
@@ -44,4 +45,11 @@ body {
 	left: 0;
 	right: 0;
 	background-color: #000;
+	color: #0af;
+	font-family: monospace;
+	overflow-y: auto;
+}
+
+.output p {
+	margin: 2em;
 }
