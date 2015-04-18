@@ -1,14 +1,8 @@
-- Weather, geoloaction data;
--- what do people do? how weather influences what people do
-
-- IoT
--- Data collection, and processing
-
-- Keyboard
+Keyboard
 -- delay on typing and typing patterns
 -- IRC, Slack; is there a key stroke protocol;
 -- hook into a public IRC channel that is pumping data... could we determine bots Vs humans?
--- Grab a key logging framework, and build off of that?
+-- Grab a key logging framework, and build off of that? HTML/JS for collection, .js html plugin
 -- Typing Errors, deletes; rate of failure; correlation between rate of failure and speed.
 -- Type of keyboards, keyboard layouts make a difference (if we note what type of computer are people are on).
 -- Languages, second languages; could gleam some more information into usage
