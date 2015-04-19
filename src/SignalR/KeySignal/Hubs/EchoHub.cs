@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNet.SignalR;
 using Microsoft.ServiceBus.Messaging;
+using System;
 using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,7 +17,10 @@ namespace KeySignal.Hubs
         {
             var json = Newtonsoft.Json.JsonConvert.SerializeObject(s);
             var data = JsonStringToByteArray(json);
-            var msg = new EventData(data);
+            var msg = new EventData(data)
+            {
+                PartitionKey = "nothing"
+            };
             await eventHubClient.SendAsync(msg);
 
             Clients.All.NewCharacter(s.keyvalue);
@@ -55,7 +59,10 @@ namespace KeySignal.Hubs
             };
             var json = Newtonsoft.Json.JsonConvert.SerializeObject(flat);
             var data = JsonStringToByteArray(json);
-            return new EventData(data);
+            return new EventData(data)
+            {
+                PartitionKey = "nothing"
+            };
         }
 
         public static byte[] JsonStringToByteArray(string jsonByteString)
