@@ -1,0 +1,1 @@
+{"uniqueId":"52cd2da9-84df-4eab-841f-439b5b68af79","email":null,"name":null,"time":"2015-04-19T16:31:49.873Z","order":1,"action":3,"guid":"0d3ede95-65aa-6848-9ae8-1c609bdeb532","keyvalue":"F","interval":"00:00:00","pressinterval":"00:00:00.1680000"}

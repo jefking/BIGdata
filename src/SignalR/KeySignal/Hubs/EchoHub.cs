@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNet.SignalR;
+﻿using King.Azure.Data;
+using Microsoft.AspNet.SignalR;
 using Microsoft.ServiceBus.Messaging;
 using System;
 using System.Configuration;
@@ -13,6 +14,8 @@ namespace KeySignal.Hubs
         const string name = "keyspls";
         private static readonly string connectionString = ConfigurationManager.AppSettings["Microsoft.ServiceBus.ConnectionString"];
         private readonly EventHubClient eventHubClient = EventHubClient.CreateFromConnectionString(connectionString, name);
+
+        private Container container = new Container("keystrokes", ConfigurationManager.AppSettings["blobstorage"]);
 
         public async Task SendStroke(Stroke s)
         {
@@ -31,11 +34,15 @@ namespace KeySignal.Hubs
         {
             if (e.strokes.All(a => a.action != 3))
                 return;
+            
+            e.uniqueId = this.Context.ConnectionId;
+
+            await container.Save(string.Format("{0}-{1}.json", e.uniqueId, Guid.NewGuid()), e);
 
             var flats = from s in e.strokes.OrderBy(a => a.order)
-                        select Convert(this.Context.ConnectionId, e, s);
+                        select Convert(e.uniqueId, e, s);
 
-            await eventHubClient.SendBatchAsync(flats);
+            eventHubClient.SendBatch(flats);
 
             foreach (var s in e.strokes)
             {
