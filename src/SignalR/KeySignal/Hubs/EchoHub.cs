@@ -27,7 +27,7 @@ namespace KeySignal.Hubs
             Clients.All.NewCharacter(s.keyvalue);
         }
 
-        public async Task SendExample(Example e)
+        public void SendExample(Example e)
         {
             if (e.strokes.All(a => a.action != 3))
                 return;
@@ -35,7 +35,7 @@ namespace KeySignal.Hubs
             var flats = from s in e.strokes.OrderBy(a => a.order)
                         select Convert(this.Context.ConnectionId, e, s);
 
-            await eventHubClient.SendBatchAsync(flats);
+            eventHubClient.SendBatch(flats);
 
             foreach (var s in e.strokes)
             {
