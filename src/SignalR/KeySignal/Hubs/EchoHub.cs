@@ -19,7 +19,10 @@ namespace KeySignal.Hubs
             var msg = new EventData(data);
             await eventHubClient.SendAsync(msg);
 
-            Clients.All.NewCharacter(s.value);
+            if (3 == s.action)
+            {
+                Clients.All.NewCharacter(s.value);
+            }
         }
 
         public async Task SendExample(Example e)
@@ -29,7 +32,7 @@ namespace KeySignal.Hubs
 
             await eventHubClient.SendBatchAsync(flats);
 
-            foreach (var s in e.strokes)
+            foreach (var s in e.strokes.Where(s => s.action == 3))
             {
                 Clients.All.NewCharacter(s.value);
             }
