@@ -1,0 +1,3 @@
+Container: keystrokes
+
+DefaultEndpointsProtocol=https;AccountName=keyaudit;AccountKey=YyEFvjRBgcP+hTyvByipYebhSGGeYWBZxOGu1aB3rdSZWaR9pYD3M0WE6rKuNHUp2YPsANmokTjxKHQpp34jnw==;
