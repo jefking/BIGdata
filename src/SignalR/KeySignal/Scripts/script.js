@@ -156,6 +156,7 @@ $(function () {
                 return a.send !== undefined && a.send === true;
             })
             .do(function (arg) {
+                console.log("dSending=" + arg.data);
                 subjectCall.onNext(arg.data);
             })
             .subscribe();
@@ -217,14 +218,17 @@ $(function () {
                         lastKeyUpValues.push(data);
                 }
 
+                var equality = upOrder == sameKeyDownObj.order;
 
-                if (upOrder >= sameKeyDownObj.order) {
+                var more = upOrder > sameKeyDownObj.order;
+                if (more) {
+                    console.log("more");
+                }
+                if (equality) {
                     if (lastKeyUpValues.length == 0) {
                         var index = lastKeyDownValues.indexOf(sameKeyDownObj);
                         if (index > -1)
                             lastKeyDownValues.splice(index, 1);
-                        //console.log(lastKeyDownValues[0]);
-                        //console.log(lastKeyDownValues[1]);
                         return { send: true, batch: false, data: data }
                     } else {
                         tryToPushInKeyUp();
@@ -239,39 +243,6 @@ $(function () {
                     }
                     return { send: true, batch: true, data: data }
                 }
-                //var copy = lastKeyDownValues.slice();
-
-                //for (var i = copy.length -1; i >= 0; i--) {
-                //    if (copy[i].key === data.keyvalue) {
-                //        //data.pressinterval = time.subtract(lastKeyDownValues[i].time);
-                //        data.pressinterval = moment.duration(time.diff(copy[i].time));
-                //        data.interval = copy[i].interval;
-                //        data.order = copy[i].order;
-
-                //        parsePressInterval(data);
-                //        tryParseInterval(data);
-
-                //        lastKeyUpValues.push(data);
-                //        console.log("copy=" + copy[i].order);
-                //        if (currentOrder == copy[i].order) {
-                //            if (lastKeyUpValues.length == 0) {
-                //                lastKeyDownValues.splice(i, 1);
-                //                return { send: true, batch: false, data: data }
-                //            } else {
-                //                return { send: true, batch: true, data: data }
-                //            }
-                //        } else {
-                //            console.log("dif");
-                //        }
-
-                //        if (lastKeyUpValues.length <= 10) {
-                //            return { send: false, data: data }
-                //        }
-                //        return { send: true, batch: true, data: data }
-                //    }
-                //}
-
-                //return { send: true, data: data };
             })
                 .where(function (arg) {
                     return arg.send !== undefined && arg.send;
@@ -312,6 +283,7 @@ $(function () {
                                 if (index > -1)
                                     lastKeyDownValues.splice(index, 1);
                             }
+                            console.log(a);
                             subjectCall.onNext(a);
                         });
                         lastKeyUpValues = [];
@@ -322,7 +294,7 @@ $(function () {
                     }
                 }).subscribe();
 
-        subjectCall.windowWithTimeOrCount(100, // time
+        subjectCall.windowWithTimeOrCount(200, // time
                 100,
                 Rx.Scheduler.timeout) // count
             .selectMany(function (x) {

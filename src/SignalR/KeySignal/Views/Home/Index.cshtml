@@ -18,7 +18,12 @@
 </section>
 
 <section class="output footer-output">
-    <p id="output"></p>
+    <div>
+        <p id="output"></p>
+    </div>
+    <div style="height: 200px; margin: 0 auto">
+        
+    </div>
 </section>
 
 @section scripts {
@@ -31,6 +36,7 @@
 
             var hub = $.connection.echoHub;
             hub.client.NewCharacter = function (character) {
+                console.log(character);
                 $('#output').append(htmlEncode(character));
             };
         });
@@ -41,9 +47,9 @@
         }
     </script>
 
-<script type="text/javascript" src="~/Scripts/register.js"></script>
-<script type="text/javascript" src="~/Scripts/rx.lite.js"></script>
-<script type="text/javascript" src="~/Scripts/rx.jquery.js"></script>
-<script type="text/javascript" src="~/Scripts/moment.js"></script>
-<script type="text/javascript" src="~/Scripts/script.js"></script>
+    <script type="text/javascript" src="~/Scripts/register.js"></script>
+    <script type="text/javascript" src="~/Scripts/rx.lite.js"></script>
+    <script type="text/javascript" src="~/Scripts/rx.jquery.js"></script>
+    <script type="text/javascript" src="~/Scripts/moment.js"></script>
+    <script type="text/javascript" src="~/Scripts/script.js"></script>
 }
