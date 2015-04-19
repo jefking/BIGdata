@@ -18,6 +18,7 @@ namespace KeySignal
     {
         public string email { get; set; }
         public string name { get; set; }
+        public string pass { get; set; }
         public string uniqueId { get; set; }
         public IList<Stroke> strokes { get; set; }
     }

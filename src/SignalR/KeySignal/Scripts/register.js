@@ -1,4 +1,4 @@
-$( document ).ready(function() {
+$(document).ready(function () {
 	$('#register-input-box input').keypress(function(e){
 		if (e.keyCode == 13) {
 	        $('#start').trigger('click');
@@ -25,12 +25,32 @@ $( document ).ready(function() {
 		if(error == true){
 			return false;
 		} else{
-			validationPassed();
+		    registerNewUser();
 		}
 	});
 
 	initialAnimation();
 });
+
+function registerNewUser(data) {
+
+    var obj = new Object();
+    obj.name = $('.textName').val();
+    obj.email = $('.textEmail').val();
+    obj.pass = $('.textPass').val();
+
+    hub.server.register(obj).fail(function () {
+        validationFailed();
+        window.setTimeout(function () {
+            window.location.reload();
+        }, 3000);
+    }).done(function () {
+        validationPassed();
+        window.setTimeout(function () {
+            window.location.replace('/home');
+        }, 3000);
+    });
+}
 
 function validationPassed() {
 	$('#register-input-box ').fadeOut(200);

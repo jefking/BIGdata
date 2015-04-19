@@ -4,13 +4,11 @@
 /// <reference path="Scripts/bufferWithTimeOrCount.js" />
 /// <reference path="Scripts/moment.js" />
 
+var hub;
 $(function () {
-
-    var hub = $.connection.echoHub;
+    hub = $.connection.echoHub;
 
     $.connection.hub.start().done(function () {
-
-        console.log("Connnected!");
 
         function postMessage(data) {
 
@@ -69,7 +67,6 @@ $(function () {
 
         $('.KeyStrokeCounter').keydownAsObservable()
             .map(function (arg) {
-                console.log("down=" + String.fromCharCode(arg.keyCode));
 
                 var keycode = arg.keyCode;
                 if (!((keycode > 47 && keycode < 58) || // number keys
@@ -88,8 +85,7 @@ $(function () {
                 var time = getTime(arg);
                 var action = 3;
                 order = order + 1;
-                console.log("orderDown=" + order);
-
+                
                 var data = new Object();
                 data.time = time;
                 data.order = order;
@@ -168,8 +164,6 @@ $(function () {
         $('.KeyStrokeCounter').keyupAsObservable()
             .map(function (arg) {
 
-                console.log("up=" + String.fromCharCode(arg.keyCode));
-
                 var keycode = arg.keyCode;
                 if (!((keycode > 47 && keycode < 58) || // number keys
                         keycode == 32 || keycode == 13 || keycode == 8 || // spacebar & return key(s) (if you want to allow carriage returns)
@@ -183,7 +177,6 @@ $(function () {
                 upOrder++;
 
                 var currentOrder = order;
-                console.log("orderUp=" + currentOrder);
                 var time = getTime(arg);
                 var action = 3;
                 var data = new Object();
@@ -200,8 +193,8 @@ $(function () {
                     }
                 }
 
-                if (sameKeyDownObj === undefined || sameKeyDownObj.time === undefined) {
-                    console.log("BUG");
+                if (sameKeyDownObj === undefined) {
+                    return { send: false }
                 }
 
                 data.pressinterval = moment.duration(time.diff(sameKeyDownObj.time));

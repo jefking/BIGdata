@@ -2,13 +2,7 @@
     ViewBag.Title = "Keysassyness";
 }
 
-<section class="register-helpers">
-    <a id="pass">pass</a>
-    <a id="fail">fail</a>
-    <a id="start">start</a>
-</section>
-
-<section id="register-input-box">
+<section id="register-input-box" class="form-horizontal">
     <label>
         Type your name
         <input class="KeyStrokeCounter textName"></input>
@@ -21,6 +15,7 @@
         Type your pass phrase
         <input class="KeyStrokeCounter textPass"></input>
     </label>
+    <button class="btn btn-info" id="start">Register</button>
 </section>
 
 <section id="output-pass" class="register-output pass">

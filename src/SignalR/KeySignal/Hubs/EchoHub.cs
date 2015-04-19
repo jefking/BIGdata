@@ -43,6 +43,11 @@ namespace KeySignal.Hubs
             }
         }
 
+        public async Task Register(Example e)
+        {
+
+        }
+
         private static EventData Convert(string id, Example e, Stroke s)
         {
             var flat = new FlatStroke()
