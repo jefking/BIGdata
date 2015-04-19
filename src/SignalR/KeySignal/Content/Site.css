@@ -65,3 +65,65 @@ body {
 .output p#output { /* this is where our output goes */
 	margin: 2em;
 }
+
+#register-input-box{
+    border: 2px solid #0af;
+    border-radius: 8px;
+    height: 530px;
+    margin: 50px auto;
+    padding: 5%;
+    width: 100%;
+}
+
+#register-input-box label {
+    font-family: "Ubuntu Mono",monospace;
+    font-size: 25px;
+    text-align: center;
+    width: 100%;
+}
+
+
+#register-input-box input {
+    background-color: #026;
+    color: #fff;
+    font-family: "Ubuntu Mono",monospace;
+    font-size: 25px;
+    margin: 10px 0 30px;
+    padding: 10px;
+    width: 100%;
+}
+
+#register-input-box label.error{
+	color: #ed2525;
+}
+
+.pass {
+    border: 2px solid #4f4;
+}
+
+.fail{
+    border: 2px solid #f44;
+}
+
+.register-output{
+    border-radius: 8px;
+    margin: 50px auto;
+    padding: 5%;
+    width: 100%;
+}
+
+.register-output p{
+    text-align: center;
+}
+
+.register-helpers {
+    bottom: 0;
+    height: 30px;
+    position: fixed;
+    right: 0;
+    text-align: right;
+}
+
+#register-input-box.login-input-box{
+    height: 250px;
+}

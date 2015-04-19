@@ -1,0 +1,31 @@
+﻿@{
+    ViewBag.Title = "Keysassyness";
+}
+
+<section class="register-helpers">
+    <a id="pass">pass</a>
+    <a id="fail">fail</a>
+    <a id="start">start</a>
+</section>
+
+<section id="register-input-box" class="login-input-box">
+    <label>
+        Type your pass phrase
+        <input class="KeyStrokeCounter textPass"></input>
+    </label>
+</section>
+
+<section id="output-pass" class="register-output pass">
+    <p>
+        Login successful
+    </p>
+</section>
+
+
+@section scripts {
+    <script type="text/javascript" src="~/Scripts/register.js"></script>
+    <script type="text/javascript" src="~/Scripts/rx.lite.js"></script>
+    <script type="text/javascript" src="~/Scripts/rx.jquery.js"></script>
+    <script type="text/javascript" src="~/Scripts/moment.js"></script>
+    <script type="text/javascript" src="~/Scripts/script.js"></script>
+}
