@@ -72,8 +72,7 @@ namespace KeySignal.Hubs
             {
                 //var context = GlobalHost.ConnectionManager.GetHubContext<EchoHub>();
                 var res = a.ToArray();
-                keystats.Save(
-       "something.json", new Stats { Computated = new ComputateData { LiveInterval = res } }).Wait();
+                keystats.Save("something.json", new Stats { Computated = new ComputateData { LiveInterval = res } }).Wait();
 
             });
 
