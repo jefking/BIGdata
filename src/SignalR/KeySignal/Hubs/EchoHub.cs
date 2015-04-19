@@ -6,6 +6,8 @@ using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using King.Mapper;
+using System.Collections.Generic;
 
 namespace KeySignal.Hubs
 {
@@ -16,6 +18,8 @@ namespace KeySignal.Hubs
         private readonly EventHubClient eventHubClient = EventHubClient.CreateFromConnectionString(connectionString, name);
 
         private Container container = new Container("keystrokes", ConfigurationManager.AppSettings["blobstorage"]);
+
+        private TableStorage table = new TableStorage("keystrokes", ConfigurationManager.AppSettings["blobstorage"]);
 
         public async Task SendStroke(Stroke s)
         {
@@ -38,11 +42,26 @@ namespace KeySignal.Hubs
             e.uniqueId = this.Context.ConnectionId;
 
             await container.Save(string.Format("{0}-{1}.json", e.uniqueId, Guid.NewGuid()), e);
-
+            
             var flats = from s in e.strokes.OrderBy(a => a.order)
-                        select Convert(e.uniqueId, e, s);
+                        select Convert(e, s);
 
-            eventHubClient.SendBatch(flats);
+            var dics = new List<IDictionary<string, object>>();
+
+            foreach (var f in flats)
+            {
+                var d = f.ToDictionary();
+                d[TableStorage.PartitionKey] = f.uniqueId;
+                d[TableStorage.RowKey] = f.order;
+                dics.Add(d);
+            }
+
+            await table.Insert(dics);
+
+            var events = from f in flats
+                        select Convert(f);
+
+            eventHubClient.SendBatch(events);
 
             foreach (var s in e.strokes)
             {
@@ -55,9 +74,9 @@ namespace KeySignal.Hubs
 
         }
 
-        private static EventData Convert(string id, Example e, Stroke s)
+        private static FlatStroke Convert(Example e, Stroke s)
         {
-            var flat = new FlatStroke()
+            return new FlatStroke()
             {
                 time = s.time,
                 order = s.order,
@@ -68,8 +87,12 @@ namespace KeySignal.Hubs
                 pressinterval = s.pressinterval,
                 email = e.email,
                 name = e.name,
-                uniqueId = id,
+                uniqueId = e.uniqueId,
             };
+        }
+
+        private static EventData Convert(FlatStroke flat)
+        {
             var json = Newtonsoft.Json.JsonConvert.SerializeObject(flat);
             var data = Encoding.UTF8.GetBytes(json);
             return new EventData(data)
