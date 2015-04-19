@@ -6,115 +6,186 @@
 
 $(function () {
 
-    function postMessage(data) {
-        var sas = "SharedAccessSignature sr=https%3a%2f%2fkeysaasy.servicebus.windows.net%2fkeyspls%2fpublishers%2fkeypub%2fmessages&sig=cEaIs41nkG3ykOaWxDVVJzMUJwLZMfiwsr5cggs7cbc%3d&se=1429419563&skn=JSSender";
+    var hub = $.connection.echoHub;
 
-        var serviceNamespace = "keysaasy";
-        var hubName = "keyspls";
-        var deviceName = "keypub";
+    $.connection.hub.start().done(function () {
 
-        var HttpRequest = new XMLHttpRequest();
-        HttpRequest.open("POST", "https://" + serviceNamespace + ".servicebus.windows.net/" + hubName + "/publishers/" + deviceName + "/messages", true);
-        HttpRequest.setRequestHeader('Content-Type', "application/json;type=entry;charset=utf-8");
-        HttpRequest.setRequestHeader("Authorization", sas);
+        console.log("connnected");
+        //$('#TxtMessage').keypress(function () {
 
-        var obj = new Object();
-        obj.userId = $('#textUser').val();
-        obj.strokes = data;
-        var value = JSON.stringify(obj);
-        HttpRequest.send(value);
-    };
+        //    hub.server.send($('#TxtMessage').val().slice(-1));
+        //});
 
-    function getTime(arg) {
-        return moment(arg.timeStamp);
-    }
+        function postMessage(data) {
 
-    var subjectCall = new Rx.Subject();
-    var order;
-    var guid;
+            var obj = new Object();
+            obj.name = $('.textName').val();
+            obj.strokes = data;
+            obj.email = $('.textEmail').val();
 
-    $('.KeyStrokeCounter').keydownAsObservable()
-        .map(function (arg) {
-            var time = getTime(arg);
-            // beginTime = time;
-            var action = 3;
-            order = order + 1;
+            hub.server.sendExample(obj);
+        }
 
-            var data = new Object();
-            data.time = time;
-            data.order = order;
-            data.action = action;
-            data.guid = guid;
-            data.value = String.fromCharCode(arg.keyCode);
-            return data;
-        })
-        .do(function (arg) {
-            subjectCall.onNext(arg);
-        }).subscribe();
+        //function postMessage(data) {
+        //    var sas = "SharedAccessSignature sr=https%3a%2f%2fkeysaasy.servicebus.windows.net%2fkeyspls%2fpublishers%2fkeypub%2fmessages&sig=cEaIs41nkG3ykOaWxDVVJzMUJwLZMfiwsr5cggs7cbc%3d&se=1429419563&skn=JSSender";
 
-    $('.KeyStrokeCounter').keyupAsObservable()
-        .map(function (arg) {
-            var time = getTime(arg);
-            var action = 4;
-            order = order + 1;
+        //    var serviceNamespace = "keysaasy";
+        //    var hubName = "keyspls";
+        //    var deviceName = "keypub";
 
-            var data = new Object();
-            data.time = time;
-            data.order = order;
-            data.action = action;
-            data.guid = guid;
-            data.value = String.fromCharCode(arg.keyCode);
-            return data;
-        }).do(function (arg) {
-            subjectCall.onNext(arg);
-        }).subscribe();
+        //    var HttpRequest = new XMLHttpRequest();
+        //    HttpRequest.open("POST", "https://" + serviceNamespace + ".servicebus.windows.net/" + hubName + "/publishers/" + deviceName + "/messages", true);
+        //    HttpRequest.setRequestHeader('Content-Type', "application/json;type=entry;charset=utf-8");
+        //    HttpRequest.setRequestHeader("Authorization", sas);
 
-    subjectCall.windowWithTimeOrCount(1000, // time
-            100,
-            Rx.Scheduler.timeout) // count
-        .selectMany(function (x) {
-            return x.toArray();
-        })
-        .where(function (x) {
-            return x.length > 0;
-        })
-        .do(function (x) {
-            return postMessage(x);
-        })
-        .subscribe();
+        //    var obj = new Object();
+        //    obj.userId = $('#textUser').val();
+        //    obj.strokes = data;
+        //    var value = JSON.stringify(obj);
+        //    //HttpRequest.send(value);
+        //};
 
-    $('.KeyStrokeCounter').focusinAsObservable()
-     .map(function (arg) {
-         guid = genGuid();
-         var time = getTime(arg);
-         var action = 1;
-         order = 1;
+        function getTime(arg) {
+            return moment(arg.timeStamp);
+        }
 
-         var data = new Object();
-         data.time = time;
-         data.order = order;
-         data.action = action;
-         data.guid = guid;
-         return data;
-     }).do(function (arg) {
-         subjectCall.onNext(arg);
-     }).subscribe();
+        var subjectCall = new Rx.Subject();
+        var order = 0;
+        var guid;
+        var lastKeyDownTime;
+        var lastKeyDownValues;
 
-    $('.KeyStrokeCounter').focusoutAsObservable()
-        .map(function (arg) {
-            var time = getTime(arg);
-            var action = 2;
-            order = order + 1;
+        $('.KeyStrokeCounter').keydownAsObservable()
+            .map(function (arg) {
+                var previousKeyDown = lastKeyDownTime;
+                lastKeyDownTime = getTime(arg);
 
-            var data = new Object();
-            data.time = time;
-            data.order = order;
-            data.action = action;
-            data.guid = guid;
-            return data;
-        }).do(function (arg) {
-            subjectCall.onNext(arg);
-        }).subscribe();
+                var time = getTime(arg);
+                // beginTime = time;
+                //var action = 3;
+                order = order + 1;
+
+                var data = new Object();
+                data.time = time;
+                data.order = order;
+                //data.action = action;
+                //data.guid = guid;
+                data.value = String.fromCharCode(arg.keyCode);
+
+                if (previousKeyDown !== undefined) {
+                    data.interval = lastKeyDownTime.subtract(previousKeyDown);
+                }
+
+                var temp = {
+                    time: lastKeyDownTime,
+                    key: data.value,
+                    interval: data.interval
+                }
+
+                if (lastKeyDownValues === undefined) {
+                    lastKeyDownValues = [temp];
+                } else {
+
+                    var found = false;
+                    for (var i = 0; i < lastKeyDownValues.length; i++) {
+                        if (lastKeyDownValues[i].key === temp.key) {
+                            lastKeyDownValues[i].time = temp.time;
+                            found = true;
+                            break;
+                        }
+                    }
+
+                    if (!found) {
+                        lastKeyDownValues.push(temp);
+                        if (lastKeyDownValues.length > 10) {
+                            lastKeyDownValues.splice(0, 1);
+                        }
+                    }
+                }
+
+                return data;
+            })
+            //.do(function (arg) {
+                //subjectCall.onNext(arg);
+            //})
+            .subscribe();
+
+        $('.KeyStrokeCounter').keyupAsObservable()
+            .map(function (arg) {
+                var time = getTime(arg);
+                var action = 3;
+                order = order + 1;
+
+                var data = new Object();
+                data.time = time;
+                data.order = order;
+                data.action = action;
+                data.guid = guid;
+                data.value = String.fromCharCode(arg.keyCode);
+
+                if (lastKeyDownValues !== undefined) {
+
+                    for (var i = 0; i < lastKeyDownValues.length; i++) {
+                        if (lastKeyDownValues[i].key === data.value) {
+                            data.pressinterval = time.subtract(lastKeyDownValues[i].time);
+                            data.interval = lastKeyDownValues[i].interval;
+                            break;
+                        }
+                    }
+                }
+
+                return data;
+            }).do(function (arg) {
+                subjectCall.onNext(arg);
+            }).subscribe();
+
+        subjectCall.windowWithTimeOrCount(1000, // time
+                100,
+                Rx.Scheduler.timeout) // count
+            .selectMany(function (x) {
+                return x.toArray();
+            })
+            .where(function (x) {
+                return x.length > 0;
+            })
+            .do(function (x) {
+                return postMessage(x);
+            })
+            .subscribe();
+
+        $('.KeyStrokeCounter').focusinAsObservable()
+         .map(function (arg) {
+             guid = genGuid();
+             var time = getTime(arg);
+             var action = 1;
+
+             var data = new Object();
+             data.time = time;
+             data.order = order;
+             data.action = action;
+             data.guid = guid;
+             return data;
+         }).do(function (arg) {
+             subjectCall.onNext(arg);
+         }).subscribe();
+
+        $('.KeyStrokeCounter').focusoutAsObservable()
+            .map(function (arg) {
+                var time = getTime(arg);
+                var action = 2;
+                order = order + 1;
+
+                var data = new Object();
+                data.time = time;
+                data.order = order;
+                data.action = action;
+                data.guid = guid;
+                return data;
+            }).do(function (arg) {
+                subjectCall.onNext(arg);
+            }).subscribe();
+
+    });
 
 });
 
