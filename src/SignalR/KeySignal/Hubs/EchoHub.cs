@@ -4,9 +4,9 @@ namespace KeySignal.Hubs
 {
     public class EchoHub : Hub
     {
-        public void Hello()
+        public void Send(string character)
         {
-            Clients.All.hello();
+            Clients.All.Send(character);
         }
     }
 }

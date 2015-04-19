@@ -15,11 +15,35 @@
 </section>
 
 <section class="input">
-    <textarea></textarea>
+    <textarea id="TxtMessage"></textarea>
 </section>
 
-<section class="output">
-    <p>
-        Sample text
-    </p>
+<section class="output" id="output">
 </section>
+
+@section scripts {
+
+    <script src="~/Scripts/jquery.signalR-2.2.0.js"></script>
+    <script src="~/signalr/Hubs"></script>
+
+    <script>
+        $(function () {
+
+            var hub = $.connection.echoHub;
+            hub.client.Send = function (character) {
+                $('#output').append(htmlEncode(character));
+            };
+
+            $.connection.hub.start().done(function () {
+                $('#TxtMessage').keypress(function () {
+                    hub.server.send($('#TxtMessage').val());
+                });
+            });
+        });
+
+        function htmlEncode(value) {
+            var encodedValue = $('<div />').text(value).html();
+            return encodedValue;
+        }
+    </script>
+}
