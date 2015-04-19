@@ -9,14 +9,8 @@ namespace KeySignal.Hubs
     public class EchoHub : Hub
     {
         const string name = "keyspls";
-
         private static readonly string connectionString = ConfigurationManager.AppSettings["Microsoft.ServiceBus.ConnectionString"];
         private readonly EventHubClient eventHubClient = EventHubClient.CreateFromConnectionString(connectionString, name);
-
-        public void Send(string character)
-        {
-            Clients.All.Send(character);
-        }
 
         public async Task SendStroke(Stroke s)
         {
@@ -24,6 +18,8 @@ namespace KeySignal.Hubs
             var data = JsonStringToByteArray(json);
             var msg = new EventData(data);
             await eventHubClient.SendAsync(msg);
+
+            Clients.All.NewCharacter(s.value);
         }
 
         public async Task SendExample(Example e)
@@ -32,7 +28,11 @@ namespace KeySignal.Hubs
                         select Convert(this.Context.ConnectionId, e, s);
 
             await eventHubClient.SendBatchAsync(flats);
-          
+
+            foreach (var s in e.strokes)
+            {
+                Clients.All.NewCharacter(s.value);
+            }
         }
 
         private static EventData Convert(string id, Example e, Stroke s)

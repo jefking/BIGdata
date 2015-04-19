@@ -31,7 +31,7 @@
         $(function () {
 
             var hub = $.connection.echoHub;
-            hub.client.Send = function (character) {
+            hub.client.NewCharacter = function (character) {
                 $('#output').append(htmlEncode(character));
             };
 
