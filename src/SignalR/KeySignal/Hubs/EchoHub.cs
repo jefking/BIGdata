@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNet.SignalR;
-using Microsoft.ServiceBus;
 using Microsoft.ServiceBus.Messaging;
 using System.Configuration;
 using System.Threading.Tasks;
@@ -11,6 +10,7 @@ namespace KeySignal.Hubs
         const string name = "keyspls";
 
         private readonly string connectionString = ConfigurationManager.AppSettings["Microsoft.ServiceBus.ConnectionString"];
+
         public void Send(string character)
         {
             Clients.All.Send(character);
@@ -24,7 +24,6 @@ namespace KeySignal.Hubs
             var data = JsonStringToByteArray(json);
             var msg = new EventData(data);
             await eventHubClient.SendAsync(msg);
-
         }
         public async Task SendExample(Example e)
         {
