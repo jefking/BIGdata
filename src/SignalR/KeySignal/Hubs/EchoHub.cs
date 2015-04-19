@@ -41,7 +41,6 @@ namespace KeySignal.Hubs
             
             e.uniqueId = this.Context.ConnectionId;
 
-            await container.Save(string.Format("{0}-{1}.json", e.uniqueId, Guid.NewGuid()), e);
             
             var flats = from s in e.strokes.OrderBy(a => a.order)
                         select Convert(e, s);
@@ -53,20 +52,24 @@ namespace KeySignal.Hubs
                 var d = f.ToDictionary();
                 d[TableStorage.PartitionKey] = f.uniqueId;
                 d[TableStorage.RowKey] = f.order;
+                d["intervalms"] = f.interval.TotalMilliseconds;
+                d["pressintervalms"] = f.pressinterval.TotalMilliseconds;
                 dics.Add(d);
             }
-
-            await table.Insert(dics);
 
             var events = from f in flats
                         select Convert(f);
 
-            eventHubClient.SendBatch(events);
+            var t1 = container.Save(string.Format("{0}-{1}.json", e.uniqueId, Guid.NewGuid()), e);
+            var t2 = table.Insert(dics);
+            var t3 = eventHubClient.SendBatchAsync(events);
 
             foreach (var s in e.strokes)
             {
                 Clients.All.NewCharacter(s.keyvalue);
             }
+
+            await Task.WhenAll(t1, t2, t3);
         }
 
         public async Task Register(Example e)
