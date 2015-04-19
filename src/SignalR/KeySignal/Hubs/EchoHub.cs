@@ -57,14 +57,9 @@ namespace KeySignal.Hubs
 
         public static byte[] JsonStringToByteArray(string jsonByteString)
         {
-            jsonByteString = jsonByteString.Substring(1, jsonByteString.Length - 2);
-            string[] arr = jsonByteString.Split(',');
-            byte[] bResult = new byte[arr.Length];
-            for (int i = 0; i < arr.Length; i++)
-            {
-                bResult[i] = byte.Parse(arr[i]);
-            }
-            return bResult;
+            var bytes = new byte[jsonByteString.Length * sizeof(char)];
+            System.Buffer.BlockCopy(jsonByteString.ToCharArray(), 0, bytes, 0, bytes.Length);
+            return bytes;
         }
     }
 }
