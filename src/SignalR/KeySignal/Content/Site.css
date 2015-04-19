@@ -22,3 +22,58 @@ select,
 textarea {
     max-width: 280px;
 }
+body {
+	font-size: 18px;
+}
+
+.text {
+	position: fixed;
+	width: 50%;
+	height: 50%;
+	top: 0;
+	left: 0;
+	border: 2px solid #0af;
+	overflow-y: auto;
+}
+
+.text p {
+	margin: 2em;
+}
+
+.input {
+	position: fixed;
+	width: 50%;
+	height: 50%;
+	top: 0;
+	right: 0;
+	border: 2px solid #0af;
+}
+
+.input textarea {
+	font-size: 18px;
+	width: 100%;
+	height: 100%;
+	box-sizing: border-box;
+	resize: none;
+	outline: none;
+	width: 100%;
+	padding: 2em;
+	border: none;
+}
+
+.output {
+	position: fixed;
+	width: 100%;
+	height: 50%;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background-color: #000;
+	color: #0af;
+	font-family: monospace;
+	overflow-y: auto;
+}
+
+.output p {
+	margin: 2em;
+}
