@@ -204,6 +204,20 @@ $(function () {
                 parsePressInterval(data);
                 tryParseInterval(data);
 
+                var tryToPushInKeyUp = function () {
+                    var found = false;
+                    for (var j = lastKeyUpValues.length - 1; j >= 0; j--) {
+                        if (lastKeyUpValues[j].key === data.keyvalue) {
+                            found = true;
+                            break;
+                        }
+                    }
+
+                    if (!found)
+                        lastKeyUpValues.push(data);
+                }
+
+
                 if (upOrder >= sameKeyDownObj.order) {
                     if (lastKeyUpValues.length == 0) {
                         var index = lastKeyDownValues.indexOf(sameKeyDownObj);
@@ -213,20 +227,13 @@ $(function () {
                         //console.log(lastKeyDownValues[1]);
                         return { send: true, batch: false, data: data }
                     } else {
-                        var found = false;
-                        for (var j = lastKeyUpValues.length - 1; j >= 0; j--) {
-                            if (lastKeyUpValues[j].key === data.keyvalue) {
-                                found = true;
-                                break;
-                            }
-                        }
+                        tryToPushInKeyUp();
 
-                        if (!found)
-                            lastKeyUpValues.push(data);
                         return { send: true, batch: true, data: data }
                     }
                 } else {
-                    lastKeyUpValues.push(data);
+
+                    tryToPushInKeyUp();
                     if (lastKeyUpValues.length <= 10) {
                         return { send: false, data: data }
                     }
