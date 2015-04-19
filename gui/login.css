@@ -2,23 +2,27 @@ body {
 	font-size: 24px;
 	font-family: 'Ubuntu Mono', monospace;
 	color: #fff;
+	background-color: #048;
 }
 
-.effects {
+.helpers {
 	position: fixed;
-	top: 0;
-	left: 0;
-	right: 0;
 	bottom: 0;
-	background-color: #048;
-	transition: background-color 0.7s;
-	z-index: -1;
+	height: 30px;
+	right: 0;
+	text-align: right;
+}
+
+.helpers a {
+	cursor: pointer;
 }
 
 .input {
+	display: none;
+
 	margin: 50px auto;
 	width: 50%;
-	z-index: 3;
+	height: 120px;
 	border: 2px solid #0af;
 	border-radius: 8px;
 	padding: 5%;
@@ -46,9 +50,12 @@ body {
 }
 
 .output {
+	display: none;
+
 	margin: 50px auto;
 	width: 50%;
-	z-index: 5;
+	padding: 5%;
+	height: 120px;
 	border-radius: 8px;
 }
 
