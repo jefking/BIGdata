@@ -70,10 +70,11 @@ $(function () {
                 data.order = order;
                 //data.action = action;
                 //data.guid = guid;
-                data.value = String.fromCharCode(arg.keyCode);
+                data.keyvalue = String.fromCharCode(arg.keyCode);
 
                 if (previousKeyDown !== undefined) {
-                    data.interval = lastKeyDownTime.subtract(previousKeyDown);
+                    // data.interval = lastKeyDownTime.subtract(previousKeyDown);
+                    data.interval = moment.duration(lastKeyDownTime.diff(previousKeyDown));
                 }
 
                 var temp = {
@@ -121,13 +122,14 @@ $(function () {
                 data.order = order;
                 data.action = action;
                 data.guid = guid;
-                data.value = String.fromCharCode(arg.keyCode);
+                data.keyvalue = String.fromCharCode(arg.keyCode);
 
                 if (lastKeyDownValues !== undefined) {
 
                     for (var i = 0; i < lastKeyDownValues.length; i++) {
-                        if (lastKeyDownValues[i].key === data.value) {
-                            data.pressinterval = time.subtract(lastKeyDownValues[i].time);
+                        if (lastKeyDownValues[i].key === data.keyvalue) {
+                            //data.pressinterval = time.subtract(lastKeyDownValues[i].time);
+                            data.pressinterval = moment.duration(time.diff(lastKeyDownValues[i].time));
                             data.interval = lastKeyDownValues[i].interval;
                             break;
                         }
@@ -139,7 +141,7 @@ $(function () {
                 subjectCall.onNext(arg);
             }).subscribe();
 
-        subjectCall.windowWithTimeOrCount(1000, // time
+        subjectCall.windowWithTimeOrCount(5000, // time
                 100,
                 Rx.Scheduler.timeout) // count
             .selectMany(function (x) {

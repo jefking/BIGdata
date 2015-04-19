@@ -9,7 +9,7 @@ namespace KeySignal
         public int order { get; set; }
         public int action { get; set; }
         public string guid { get; set; }
-        public string value { get; set; }
+        public string keyvalue { get; set; }
         public TimeSpan interval { get; set; }
         public TimeSpan pressinterval{ get; set; }
     }

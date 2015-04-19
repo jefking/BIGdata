@@ -19,11 +19,14 @@ namespace KeySignal.Hubs
             var msg = new EventData(data);
             await eventHubClient.SendAsync(msg);
 
-            Clients.All.NewCharacter(s.value);
+            Clients.All.NewCharacter(s.keyvalue);
         }
 
         public async Task SendExample(Example e)
         {
+            if (e.strokes.All(a => a.action != 3))
+                return;
+
             var flats = from s in e.strokes
                         select Convert(this.Context.ConnectionId, e, s);
 
@@ -31,7 +34,7 @@ namespace KeySignal.Hubs
 
             foreach (var s in e.strokes)
             {
-                Clients.All.NewCharacter(s.value);
+                Clients.All.NewCharacter(s.keyvalue);
             }
         }
 
@@ -43,7 +46,7 @@ namespace KeySignal.Hubs
                 order = s.order,
                 action = s.action,
                 guid = s.guid,
-                value = s.value,
+                keyvalue = s.keyvalue,
                 interval = s.interval,
                 pressinterval = s.pressinterval,
                 email = e.email,
