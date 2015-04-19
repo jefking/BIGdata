@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNet.SignalR;
 using Microsoft.ServiceBus.Messaging;
 using System.Configuration;
-using System.Threading.Tasks;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace KeySignal.Hubs
 {
@@ -10,7 +10,8 @@ namespace KeySignal.Hubs
     {
         const string name = "keyspls";
 
-        private readonly string connectionString = ConfigurationManager.AppSettings["Microsoft.ServiceBus.ConnectionString"];
+        private static readonly string connectionString = ConfigurationManager.AppSettings["Microsoft.ServiceBus.ConnectionString"];
+        private readonly EventHubClient eventHubClient = EventHubClient.CreateFromConnectionString(connectionString, name);
 
         public void Send(string character)
         {
@@ -19,17 +20,14 @@ namespace KeySignal.Hubs
 
         public async Task SendStroke(Stroke s)
         {
-            var eventHubClient = EventHubClient.CreateFromConnectionString(connectionString, name);
-            
             var json = Newtonsoft.Json.JsonConvert.SerializeObject(s);
             var data = JsonStringToByteArray(json);
             var msg = new EventData(data);
             await eventHubClient.SendAsync(msg);
         }
+
         public async Task SendExample(Example e)
         {
-            var eventHubClient = EventHubClient.CreateFromConnectionString(connectionString, name);
-
             var flats = from s in e.strokes
                         select Convert(this.Context.ConnectionId, e, s);
 
