@@ -141,7 +141,7 @@ $(function () {
                 subjectCall.onNext(arg);
             }).subscribe();
 
-        subjectCall.windowWithTimeOrCount(5000, // time
+        subjectCall.windowWithTimeOrCount(100, // time
                 100,
                 Rx.Scheduler.timeout) // count
             .selectMany(function (x) {
