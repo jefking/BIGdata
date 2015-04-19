@@ -26,6 +26,18 @@ $(function () {
             hub.server.sendExample(obj);
         }
 
+        function formatForTwoLetters(obj) {
+            var text = obj.toString();
+            if (text.length == 0) {
+                return "00";
+            } else {
+                if (text.length == 1) {
+                    return "0" + text;
+                } else {
+                    return text;
+                }
+            }
+        }
         //function postMessage(data) {
         //    var sas = "SharedAccessSignature sr=https%3a%2f%2fkeysaasy.servicebus.windows.net%2fkeyspls%2fpublishers%2fkeypub%2fmessages&sig=cEaIs41nkG3ykOaWxDVVJzMUJwLZMfiwsr5cggs7cbc%3d&se=1429419563&skn=JSSender";
 
@@ -79,7 +91,7 @@ $(function () {
 
                 var temp = {
                     time: lastKeyDownTime,
-                    key: data.value,
+                    key: data.keyvalue,
                     interval: data.interval
                 }
 
@@ -131,6 +143,22 @@ $(function () {
                             //data.pressinterval = time.subtract(lastKeyDownValues[i].time);
                             data.pressinterval = moment.duration(time.diff(lastKeyDownValues[i].time));
                             data.interval = lastKeyDownValues[i].interval;
+
+                            var text = formatForTwoLetters(data.pressinterval.hours()) + ":" +
+                                    formatForTwoLetters(data.pressinterval.minutes()) + ":" +
+                                    formatForTwoLetters(data.pressinterval.seconds()) + "." + data.pressinterval.milliseconds();
+                            data.pressinterval = text;
+
+                            if (data.interval !== undefined) {
+                                data.interval = lastKeyDownValues[i].interval;
+
+                                text = formatForTwoLetters(data.interval.hours()) + ":" +
+                                        formatForTwoLetters(data.interval.minutes()) + ":" +
+                                        formatForTwoLetters(data.interval.seconds()) + "." + data.interval.milliseconds();
+                                data.interval = text;
+                            }
+                           
+                        
                             break;
                         }
                     }
