@@ -23,21 +23,27 @@ namespace KeySignal.Hubs
 
         public async Task SendStroke(Stroke s)
         {
+            Clients.All.NewCharacter(s.keyvalue);
+
             var json = Newtonsoft.Json.JsonConvert.SerializeObject(s);
             var data = Encoding.UTF8.GetBytes(json);
             var msg = new EventData(data)
             {
                 PartitionKey = "nothing"
             };
-            await eventHubClient.SendAsync(msg);
 
-            Clients.All.NewCharacter(s.keyvalue);
+            await eventHubClient.SendAsync(msg);
         }
 
         public async Task SendExample(Example e)
         {
             if (e.strokes.All(a => a.action != 3))
                 return;
+
+            foreach (var s in e.strokes)
+            {
+                Clients.All.NewCharacter(s.keyvalue);
+            }
             
             e.uniqueId = this.Context.ConnectionId;
 
@@ -64,11 +70,6 @@ namespace KeySignal.Hubs
             var t1 = container.Save(string.Format("{0}-{1}.json", e.uniqueId, Guid.NewGuid()), e);
             var t2 = table.Insert(dics);
             var t3 = eventHubClient.SendBatchAsync(events);
-
-            foreach (var s in e.strokes)
-            {
-                Clients.All.NewCharacter(s.keyvalue);
-            }
 
             await Task.WhenAll(t1, t2, t3);
         }
