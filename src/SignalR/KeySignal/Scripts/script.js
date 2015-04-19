@@ -85,7 +85,7 @@ $(function () {
                 var time = getTime(arg);
                 var action = 3;
                 order = order + 1;
-                
+
                 var data = new Object();
                 data.time = time;
                 data.order = order;
@@ -213,7 +213,16 @@ $(function () {
                         //console.log(lastKeyDownValues[1]);
                         return { send: true, batch: false, data: data }
                     } else {
-                        lastKeyUpValues.push(data);
+                        var found = false;
+                        for (var j = lastKeyUpValues.length - 1; j >= 0; j--) {
+                            if (lastKeyUpValues[j].key === data.keyvalue) {
+                                found = true;
+                                break;
+                            }
+                        }
+
+                        if (!found)
+                            lastKeyUpValues.push(data);
                         return { send: true, batch: true, data: data }
                     }
                 } else {
@@ -272,7 +281,7 @@ $(function () {
                         }
 
                         lastKeyUpValues.sort(compare);
-
+                        console.log(lastKeyUpValues);
                         var temp = [];
                         lastKeyUpValues.forEach(function (a) {
                             temp.push(a);
@@ -281,15 +290,18 @@ $(function () {
                         temp.forEach(function (a) {
 
                             var sameKeyDownObj;
-                            for (var i = lastKeyDownValues.length - 1; i >= 0; i--) {
-                                if (lastKeyDownValues[i].key === a.keyvalue) {
-                                    sameKeyDownObj = lastKeyDownValues[i];
+                            var total = lastKeyDownValues.length;
+                            var copy = lastKeyDownValues.slice();
+
+                            for (var i = total - 1; i >= 0; i--) {
+                                if (copy[i].key === a.keyvalue) {
+                                    sameKeyDownObj = copy[i];
                                     break;
                                 }
                             }
 
                             if (sameKeyDownObj !== undefined) {
-                                var index = lastKeyDownValues.indexOf(sameKeyDownObj);
+                                var index = lastKeyDownValues.lastIndexOf(sameKeyDownObj);
                                 if (index > -1)
                                     lastKeyDownValues.splice(index, 1);
                             }
@@ -298,6 +310,7 @@ $(function () {
                         lastKeyUpValues = [];
 
                     } else {
+                        console.log(arg.data);
                         subjectCall.onNext(arg.data);
                     }
                 }).subscribe();

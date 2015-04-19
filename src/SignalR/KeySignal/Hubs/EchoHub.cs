@@ -32,7 +32,7 @@ namespace KeySignal.Hubs
             if (e.strokes.All(a => a.action != 3))
                 return;
 
-            var flats = from s in e.strokes
+            var flats = from s in e.strokes.OrderBy(a => a.order)
                         select Convert(this.Context.ConnectionId, e, s);
 
             await eventHubClient.SendBatchAsync(flats);
