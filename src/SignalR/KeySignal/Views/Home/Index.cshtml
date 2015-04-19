@@ -36,7 +36,7 @@
 
             $.connection.hub.start().done(function () {
                 $('#TxtMessage').keypress(function () {
-                    hub.server.send($('#TxtMessage').val());
+                    hub.server.send($('#TxtMessage').val().slice(-1));
                 });
             });
         });
