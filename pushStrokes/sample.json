@@ -1,0 +1,26 @@
+﻿{
+    "userId": "1",
+    "strokes": [
+        {
+            "time": "2015-04-19T01:03:33.170Z",
+            "order": 7,
+            "action": 3,
+            "guid": "6d4ccf2b-e48b-6eb8-21f0-5396f7cacbca",
+            "value": "S"
+        },
+        {
+            "time": "2015-04-19T01:03:33.260Z",
+            "order": 8,
+            "action": 4,
+            "guid": "6d4ccf2b-e48b-6eb8-21f0-5396f7cacbca",
+            "value": "A"
+        },
+        {
+            "time": "2015-04-19T01:03:33.300Z",
+            "order": 9,
+            "action": 3,
+            "guid": "6d4ccf2b-e48b-6eb8-21f0-5396f7cacbca",
+            "value": "D"
+        }
+    ]
+}
