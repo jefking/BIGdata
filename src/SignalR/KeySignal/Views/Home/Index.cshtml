@@ -14,7 +14,7 @@
 </section>
 
 <section class="input">
-    <textarea id="TxtMessage"></textarea>
+    <textarea class="KeyStrokeCounter textPass"></textarea>
 </section>
 
 <section class="output">
@@ -33,12 +33,6 @@
             hub.client.NewCharacter = function (character) {
                 $('#output').append(htmlEncode(character));
             };
-
-            $.connection.hub.start().done(function () {
-                $('#TxtMessage').keypress(function () {
-                    hub.server.send($('#TxtMessage').val().slice(-1));
-                });
-            });
         });
 
         function htmlEncode(value) {
@@ -46,4 +40,10 @@
             return encodedValue;
         }
     </script>
+
+<script type="text/javascript" src="~/Scripts/register.js"></script>
+<script type="text/javascript" src="~/Scripts/rx.lite.js"></script>
+<script type="text/javascript" src="~/Scripts/rx.jquery.js"></script>
+<script type="text/javascript" src="~/Scripts/moment.js"></script>
+<script type="text/javascript" src="~/Scripts/script.js"></script>
 }
