@@ -61,7 +61,7 @@ namespace KeySignal.Hubs
                 pressinterval = s.pressinterval,
                 email = e.email,
                 name = e.name,
-                uniqueId = e.uniqueId,
+                uniqueId = id,
             };
             var json = Newtonsoft.Json.JsonConvert.SerializeObject(flat);
             var data = Encoding.UTF8.GetBytes(json);
