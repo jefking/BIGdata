@@ -7,7 +7,7 @@
 $(function () {
 
     function postMessage(data) {
-        var sas = "SharedAccessSignature sr=https%3a%2f%2fkeysaasy.servicebus.windows.net%2fkeyspls%2fpublishers%2fkeypub%2fmessages&sig=cBY8IdXUh%2bjv8o5EQ2lyBtYdXWciLWzPIuIIaPUisLU%3d&se=1429408841&skn=JSSender";
+        var sas = "SharedAccessSignature sr=https%3a%2f%2fkeysaasy.servicebus.windows.net%2fkeyspls%2fpublishers%2fkeypub%2fmessages&sig=cEaIs41nkG3ykOaWxDVVJzMUJwLZMfiwsr5cggs7cbc%3d&se=1429419563&skn=JSSender";
 
         var serviceNamespace = "keysaasy";
         var hubName = "keyspls";
@@ -33,7 +33,7 @@ $(function () {
     var order;
     var guid;
 
-    $('#textInput').keydownAsObservable()
+    $('.KeyStrokeCounter').keydownAsObservable()
         .map(function (arg) {
             var time = getTime(arg);
             // beginTime = time;
@@ -52,7 +52,7 @@ $(function () {
             subjectCall.onNext(arg);
         }).subscribe();
 
-    $('#textInput').keyupAsObservable()
+    $('.KeyStrokeCounter').keyupAsObservable()
         .map(function (arg) {
             var time = getTime(arg);
             var action = 4;
@@ -83,7 +83,7 @@ $(function () {
         })
         .subscribe();
 
-    $('#textInput').focusinAsObservable()
+    $('.KeyStrokeCounter').focusinAsObservable()
      .map(function (arg) {
          guid = genGuid();
          var time = getTime(arg);
@@ -100,7 +100,7 @@ $(function () {
          subjectCall.onNext(arg);
      }).subscribe();
 
-    $('#textInput').focusoutAsObservable()
+    $('.KeyStrokeCounter').focusoutAsObservable()
         .map(function (arg) {
             var time = getTime(arg);
             var action = 2;

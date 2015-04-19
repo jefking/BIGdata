@@ -1,0 +1,79 @@
+body {
+	font-size: 24px;
+	font-family: 'Ubuntu Mono', monospace;
+	color: #fff;
+	background-color: #048;
+}
+
+.helpers {
+	position: fixed;
+	bottom: 0;
+	height: 30px;
+	right: 0;
+	text-align: right;
+}
+
+.helpers a {
+	cursor: pointer;
+}
+
+.input {
+	display: none;
+	margin: 50px auto;
+	width: 50%;
+	height: 330px;
+	border: 2px solid #0af;
+	border-radius: 8px;
+	padding: 5%;
+}
+
+.input label {
+	width: 100%;
+	text-align: center;
+	font-size: 25px;
+	font-family: 'Ubuntu Mono', monospace;
+}
+
+.input label.error{
+	color: #ed2525;
+}
+
+.input input {
+	font-size: 25px;
+	margin: 10px 0 30px;
+	width: 100%;
+	background-color: #026;
+	color: #fff;
+	font-family: 'Ubuntu Mono', monospace;
+	padding: 10px;
+}
+
+.input a {
+	background-color: #026;
+}
+
+.output {
+	display: none;
+
+	margin: 50px auto;
+	width: 50%;
+	padding: 5%;
+	height: 120px;
+	border-radius: 8px;
+}
+
+.output p {
+	text-align: center;
+}
+
+.pass {
+	border: 2px solid #4f4;
+}
+
+.fail {
+	border: 2px solid #f44;
+}
+
+.output p {
+	margin: 2em;
+}
