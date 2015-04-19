@@ -22,3 +22,6 @@ Event Hub: keyspls
 Credentials:
 JSSender
 UugxnJkH/Th4An4LzSKXc8fC3IAfOwGhPMRHh/Y7mg4=
+
+SharedAccessSignature ->
+SharedAccessSignature sr=https%3a%2f%2fkeysaasy.servicebus.windows.net%2fkeyspls%2fpublishers%2fjavascript%2fmessages&sig=%2feXT21usyNvpcNioJGLeb0f7uiFznchZjSV2u0A7AEw%3d&se=1435401551&skn=JSSender
