@@ -1,5 +1,7 @@
-﻿using Microsoft.Owin;
+﻿using Microsoft.AspNet.SignalR;
+using Microsoft.Owin;
 using Owin;
+using System.Configuration;
 
 [assembly: OwinStartupAttribute(typeof(KeySignal.Startup))]
 namespace KeySignal
@@ -8,6 +10,9 @@ namespace KeySignal
     {
         public void Configuration(IAppBuilder app)
         {
+            var connectionString = ConfigurationManager.AppSettings["Microsoft.ServiceBus.ConnectionString"];
+            GlobalHost.DependencyResolver.UseServiceBus(connectionString, "Keysassy");
+
             app.MapSignalR();
         }
     }
