@@ -3,6 +3,7 @@ using Microsoft.ServiceBus.Messaging;
 using System;
 using System.Configuration;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace KeySignal.Hubs
@@ -16,7 +17,7 @@ namespace KeySignal.Hubs
         public async Task SendStroke(Stroke s)
         {
             var json = Newtonsoft.Json.JsonConvert.SerializeObject(s);
-            var data = JsonStringToByteArray(json);
+            var data = Encoding.UTF8.GetBytes(json);
             var msg = new EventData(data)
             {
                 PartitionKey = "nothing"
@@ -58,18 +59,11 @@ namespace KeySignal.Hubs
                 uniqueId = e.uniqueId,
             };
             var json = Newtonsoft.Json.JsonConvert.SerializeObject(flat);
-            var data = JsonStringToByteArray(json);
+            var data = Encoding.UTF8.GetBytes(json);
             return new EventData(data)
             {
                 PartitionKey = "nothing"
             };
-        }
-
-        public static byte[] JsonStringToByteArray(string jsonByteString)
-        {
-            var bytes = new byte[jsonByteString.Length * sizeof(char)];
-            System.Buffer.BlockCopy(jsonByteString.ToCharArray(), 0, bytes, 0, bytes.Length);
-            return bytes;
         }
     }
 }
