@@ -54,6 +54,7 @@ namespace KeySignal.Hubs
                 d[TableStorage.RowKey] = f.order;
                 d["intervalms"] = f.interval.TotalMilliseconds;
                 d["pressintervalms"] = f.pressinterval.TotalMilliseconds;
+                d["timeticks"] = f.time.Ticks;
                 dics.Add(d);
             }
 
