@@ -2,6 +2,7 @@
 using Microsoft.ServiceBus.Messaging;
 using System.Configuration;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace KeySignal.Hubs
 {
@@ -29,12 +30,32 @@ namespace KeySignal.Hubs
         {
             var eventHubClient = EventHubClient.CreateFromConnectionString(connectionString, name);
 
-            var json = Newtonsoft.Json.JsonConvert.SerializeObject(e);
-            var data = JsonStringToByteArray(json);
-            var msg = new EventData(data);
-            await eventHubClient.SendAsync(msg);
+            var flats = from s in e.strokes
+                        select Convert(this.Context.ConnectionId, e, s);
+
+            await eventHubClient.SendBatchAsync(flats);
+          
         }
 
+        private static EventData Convert(string id, Example e, Stroke s)
+        {
+            var flat = new FlatStroke()
+            {
+                time = s.time,
+                order = s.order,
+                action = s.action,
+                guid = s.guid,
+                value = s.value,
+                interval = s.interval,
+                pressinterval = s.pressinterval,
+                email = e.email,
+                name = e.name,
+                uniqueId = e.uniqueId,
+            };
+            var json = Newtonsoft.Json.JsonConvert.SerializeObject(flat);
+            var data = JsonStringToByteArray(json);
+            return new EventData(data);
+        }
 
         public static byte[] JsonStringToByteArray(string jsonByteString)
         {
