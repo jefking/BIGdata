@@ -10,11 +10,7 @@ $(function () {
 
     $.connection.hub.start().done(function () {
 
-        console.log("connnected");
-        //$('#TxtMessage').keypress(function () {
-
-        //    hub.server.send($('#TxtMessage').val().slice(-1));
-        //});
+        console.log("Connnected!");
 
         function postMessage(data) {
 
@@ -38,96 +34,61 @@ $(function () {
                 }
             }
         }
-        //function postMessage(data) {
-        //    var sas = "SharedAccessSignature sr=https%3a%2f%2fkeysaasy.servicebus.windows.net%2fkeyspls%2fpublishers%2fkeypub%2fmessages&sig=cEaIs41nkG3ykOaWxDVVJzMUJwLZMfiwsr5cggs7cbc%3d&se=1429419563&skn=JSSender";
-
-        //    var serviceNamespace = "keysaasy";
-        //    var hubName = "keyspls";
-        //    var deviceName = "keypub";
-
-        //    var HttpRequest = new XMLHttpRequest();
-        //    HttpRequest.open("POST", "https://" + serviceNamespace + ".servicebus.windows.net/" + hubName + "/publishers/" + deviceName + "/messages", true);
-        //    HttpRequest.setRequestHeader('Content-Type', "application/json;type=entry;charset=utf-8");
-        //    HttpRequest.setRequestHeader("Authorization", sas);
-
-        //    var obj = new Object();
-        //    obj.userId = $('#textUser').val();
-        //    obj.strokes = data;
-        //    var value = JSON.stringify(obj);
-        //    //HttpRequest.send(value);
-        //};
 
         function getTime(arg) {
             return moment(arg.timeStamp);
+        }
+
+        function tryParseInterval(data) {
+            if (data.interval !== undefined) {
+                var text = formatForTwoLetters(data.interval.hours()) + ":" +
+                        formatForTwoLetters(data.interval.minutes()) + ":" +
+                        formatForTwoLetters(data.interval.seconds()) + "." + data.interval.milliseconds();
+                data.interval = text;
+            }
+
+        }
+
+        function parsePressInterval(data) {
+            if (typeof data.pressinterval == 'string' || data.pressinterval instanceof String) {
+                return;
+            }
+            var text = formatForTwoLetters(data.pressinterval.hours()) + ":" +
+                            formatForTwoLetters(data.pressinterval.minutes()) + ":" +
+                            formatForTwoLetters(data.pressinterval.seconds()) + "." + data.pressinterval.milliseconds();
+            data.pressinterval = text;
         }
 
         var subjectCall = new Rx.Subject();
         var order = 0;
         var guid;
         var lastKeyDownTime;
-        var lastKeyDownValues;
+        var lastKeyDownValues = [];
+        var lastKeyValue;
+        var lastKeyUpValues = [];
 
         $('.KeyStrokeCounter').keydownAsObservable()
             .map(function (arg) {
+                console.log("down=" + String.fromCharCode(arg.keyCode));
+
+                var keycode = arg.keyCode;
+                if (!((keycode > 47 && keycode < 58) || // number keys
+                        keycode == 32 || keycode == 13 || keycode == 8 || // spacebar & return key(s) (if you want to allow carriage returns)
+                        (keycode > 64 && keycode < 91) || // letter keys
+                        (keycode > 95 && keycode < 112) || // numpad keys
+                        (keycode > 185 && keycode < 193) || // ;=,-./` (in order)
+                        (keycode > 218 && keycode < 223))) {
+
+                    return { send: false };
+                }
+
                 var previousKeyDown = lastKeyDownTime;
                 lastKeyDownTime = getTime(arg);
 
                 var time = getTime(arg);
-                // beginTime = time;
-                //var action = 3;
-                order = order + 1;
-
-                var data = new Object();
-                data.time = time;
-                data.order = order;
-                //data.action = action;
-                //data.guid = guid;
-                data.keyvalue = String.fromCharCode(arg.keyCode);
-
-                if (previousKeyDown !== undefined) {
-                    // data.interval = lastKeyDownTime.subtract(previousKeyDown);
-                    data.interval = moment.duration(lastKeyDownTime.diff(previousKeyDown));
-                }
-
-                var temp = {
-                    time: lastKeyDownTime,
-                    key: data.keyvalue,
-                    interval: data.interval
-                }
-
-                if (lastKeyDownValues === undefined) {
-                    lastKeyDownValues = [temp];
-                } else {
-
-                    var found = false;
-                    for (var i = 0; i < lastKeyDownValues.length; i++) {
-                        if (lastKeyDownValues[i].key === temp.key) {
-                            lastKeyDownValues[i].time = temp.time;
-                            found = true;
-                            break;
-                        }
-                    }
-
-                    if (!found) {
-                        lastKeyDownValues.push(temp);
-                        if (lastKeyDownValues.length > 10) {
-                            lastKeyDownValues.splice(0, 1);
-                        }
-                    }
-                }
-
-                return data;
-            })
-            //.do(function (arg) {
-                //subjectCall.onNext(arg);
-            //})
-            .subscribe();
-
-        $('.KeyStrokeCounter').keyupAsObservable()
-            .map(function (arg) {
-                var time = getTime(arg);
                 var action = 3;
                 order = order + 1;
+                console.log("orderDown=" + order);
 
                 var data = new Object();
                 data.time = time;
@@ -136,38 +97,217 @@ $(function () {
                 data.guid = guid;
                 data.keyvalue = String.fromCharCode(arg.keyCode);
 
-                if (lastKeyDownValues !== undefined) {
+                if (previousKeyDown !== undefined) {
+                    // data.interval = lastKeyDownTime.subtract(previousKeyDown);
+                    data.interval = moment.duration(lastKeyDownTime.diff(previousKeyDown));
+                }
 
-                    for (var i = 0; i < lastKeyDownValues.length; i++) {
-                        if (lastKeyDownValues[i].key === data.keyvalue) {
-                            //data.pressinterval = time.subtract(lastKeyDownValues[i].time);
-                            data.pressinterval = moment.duration(time.diff(lastKeyDownValues[i].time));
-                            data.interval = lastKeyDownValues[i].interval;
+                if (lastKeyValue !== undefined) {
+                    if (data.keyvalue === lastKeyValue) {
+                        var regularKeyDown = false;
 
-                            var text = formatForTwoLetters(data.pressinterval.hours()) + ":" +
-                                    formatForTwoLetters(data.pressinterval.minutes()) + ":" +
-                                    formatForTwoLetters(data.pressinterval.seconds()) + "." + data.pressinterval.milliseconds();
-                            data.pressinterval = text;
+                        if (lastKeyDownValues.length <= 0)
+                            regularKeyDown = true;
+                        else
+                            for (var number = 0; number < lastKeyDownValues.length; number++) {
+                                if (lastKeyDownValues[number].key === data.keyvalue) {
 
-                            if (data.interval !== undefined) {
-                                data.interval = lastKeyDownValues[i].interval;
-
-                                text = formatForTwoLetters(data.interval.hours()) + ":" +
-                                        formatForTwoLetters(data.interval.minutes()) + ":" +
-                                        formatForTwoLetters(data.interval.seconds()) + "." + data.interval.milliseconds();
-                                data.interval = text;
+                                    data.pressinterval = moment.duration(time.diff(lastKeyDownValues[number].time));
+                                    lastKeyDownValues[number].time = time;
+                                    regularKeyDown = false;
+                                    break;
+                                } else {
+                                    regularKeyDown = true;
+                                }
                             }
-                           
-                        
-                            break;
+
+                        if (!regularKeyDown) {
+                            tryParseInterval(data);
+                            parsePressInterval(data);
+
+                            return { send: true, data: data };
                         }
                     }
                 }
 
-                return data;
-            }).do(function (arg) {
-                subjectCall.onNext(arg);
-            }).subscribe();
+                lastKeyValue = data.keyvalue;
+                var temp = {
+                    time: lastKeyDownTime,
+                    key: data.keyvalue,
+                    interval: data.interval,
+                    order: data.order
+                }
+
+                var found = false;
+                for (var i = 0; i < lastKeyDownValues.length; i++) {
+                    if (lastKeyDownValues[i].key === temp.key) {
+                        lastKeyDownValues[i].time = temp.time;
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found) {
+                    lastKeyDownValues.push(temp);
+                    if (lastKeyDownValues.length > 10) {
+                        lastKeyDownValues.splice(0, 1);
+                    }
+                }
+
+                return { send: false, data: data };
+            })
+            .where(function (a) {
+                return a.send !== undefined && a.send === true;
+            })
+            .do(function (arg) {
+                subjectCall.onNext(arg.data);
+            })
+            .subscribe();
+
+        var upOrder = 0;
+        $('.KeyStrokeCounter').keyupAsObservable()
+            .map(function (arg) {
+
+                console.log("up=" + String.fromCharCode(arg.keyCode));
+
+                var keycode = arg.keyCode;
+                if (!((keycode > 47 && keycode < 58) || // number keys
+                        keycode == 32 || keycode == 13 || keycode == 8 || // spacebar & return key(s) (if you want to allow carriage returns)
+                        (keycode > 64 && keycode < 91) || // letter keys
+                        (keycode > 95 && keycode < 112) || // numpad keys
+                        (keycode > 185 && keycode < 193) || // ;=,-./` (in order)
+                        (keycode > 218 && keycode < 223))) {
+
+                    return { send: false };
+                }
+                upOrder++;
+
+                var currentOrder = order;
+                console.log("orderUp=" + currentOrder);
+                var time = getTime(arg);
+                var action = 3;
+                var data = new Object();
+                data.time = time;
+                data.action = action;
+                data.guid = guid;
+                data.keyvalue = String.fromCharCode(arg.keyCode);
+
+                var sameKeyDownObj = undefined;
+                for (var i = lastKeyDownValues.length - 1; i >= 0; i--) {
+                    if (lastKeyDownValues[i].key === data.keyvalue) {
+                        sameKeyDownObj = lastKeyDownValues[i];
+                        break;
+                    }
+                }
+
+                if (sameKeyDownObj === undefined || sameKeyDownObj.time === undefined) {
+                    console.log("BUG");
+                }
+
+                data.pressinterval = moment.duration(time.diff(sameKeyDownObj.time));
+                data.interval = sameKeyDownObj.interval;
+                data.order = sameKeyDownObj.order;
+
+                parsePressInterval(data);
+                tryParseInterval(data);
+
+                if (upOrder >= sameKeyDownObj.order) {
+                    if (lastKeyUpValues.length == 0) {
+                        var index = lastKeyDownValues.indexOf(sameKeyDownObj);
+                        if (index > -1)
+                            lastKeyDownValues.splice(index, 1);
+                        //console.log(lastKeyDownValues[0]);
+                        //console.log(lastKeyDownValues[1]);
+                        return { send: true, batch: false, data: data }
+                    } else {
+                        lastKeyUpValues.push(data);
+                        return { send: true, batch: true, data: data }
+                    }
+                } else {
+                    lastKeyUpValues.push(data);
+                    if (lastKeyUpValues.length <= 10) {
+                        return { send: false, data: data }
+                    }
+                    return { send: true, batch: true, data: data }
+                }
+                //var copy = lastKeyDownValues.slice();
+
+                //for (var i = copy.length -1; i >= 0; i--) {
+                //    if (copy[i].key === data.keyvalue) {
+                //        //data.pressinterval = time.subtract(lastKeyDownValues[i].time);
+                //        data.pressinterval = moment.duration(time.diff(copy[i].time));
+                //        data.interval = copy[i].interval;
+                //        data.order = copy[i].order;
+
+                //        parsePressInterval(data);
+                //        tryParseInterval(data);
+
+                //        lastKeyUpValues.push(data);
+                //        console.log("copy=" + copy[i].order);
+                //        if (currentOrder == copy[i].order) {
+                //            if (lastKeyUpValues.length == 0) {
+                //                lastKeyDownValues.splice(i, 1);
+                //                return { send: true, batch: false, data: data }
+                //            } else {
+                //                return { send: true, batch: true, data: data }
+                //            }
+                //        } else {
+                //            console.log("dif");
+                //        }
+
+                //        if (lastKeyUpValues.length <= 10) {
+                //            return { send: false, data: data }
+                //        }
+                //        return { send: true, batch: true, data: data }
+                //    }
+                //}
+
+                //return { send: true, data: data };
+            })
+                .where(function (arg) {
+                    return arg.send !== undefined && arg.send;
+                })
+                .do(function (arg) {
+                    if (arg.batch !== undefined && arg.batch) {
+
+                        function compare(a, b) {
+                            if (a.order < b.order)
+                                return -1;
+                            if (a.order > b.order)
+                                return 1;
+                            return 0;
+                        }
+
+                        lastKeyUpValues.sort(compare);
+
+                        var temp = [];
+                        lastKeyUpValues.forEach(function (a) {
+                            temp.push(a);
+                        });
+
+                        temp.forEach(function (a) {
+
+                            var sameKeyDownObj;
+                            for (var i = lastKeyDownValues.length - 1; i >= 0; i--) {
+                                if (lastKeyDownValues[i].key === a.keyvalue) {
+                                    sameKeyDownObj = lastKeyDownValues[i];
+                                    break;
+                                }
+                            }
+
+                            if (sameKeyDownObj !== undefined) {
+                                var index = lastKeyDownValues.indexOf(sameKeyDownObj);
+                                if (index > -1)
+                                    lastKeyDownValues.splice(index, 1);
+                            }
+                            subjectCall.onNext(a);
+                        });
+                        lastKeyUpValues = [];
+
+                    } else {
+                        subjectCall.onNext(arg.data);
+                    }
+                }).subscribe();
 
         subjectCall.windowWithTimeOrCount(100, // time
                 100,
